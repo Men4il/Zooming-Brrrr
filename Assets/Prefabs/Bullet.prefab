@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 272599930163953372}
   - component: {fileID: 272599930163953363}
   - component: {fileID: -1491608007254813742}
-  m_Layer: 0
+  - component: {fileID: 4003109374503675330}
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +94,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 272599930163953362}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -114,3 +115,45 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4003109374503675330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272599930163953362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1351088252f742478037587314e7299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rb: {fileID: -1491608007254813742}
+  _lifeDuration: 2
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnemyHit:
+    m_PersistentCalls:
+      m_Calls: []
+  ID: 0
+--- !u!114 &4003109374503675330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272599930163953362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1351088252f742478037587314e7299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rb: {fileID: -1491608007254813742}
+  _lifeDuration: 2
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnemyHit:
+    m_PersistentCalls:
+      m_Calls: []
+  ID: 0

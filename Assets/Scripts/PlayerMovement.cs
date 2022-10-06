@@ -1,44 +1,26 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float _speed;
     [SerializeField] private Camera _camera;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject _playerCapsule;
 
-    private CharacterController Controller;
-    private PlayerControls input;
+    private Vector3 _playerMovement;
+    private PlayerControlsInitializer _initializer;
+    private CharacterController _controller;
+    private Player _player;
     
-    Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-    float rayLength;
-    
-    [SerializeField] private LayerMask layerMask;
-    [SerializeField] private GameObject playerCapsule;
-    
-    private Vector3 PlayerMoveInput;
-    [SerializeField] private float bulletForce = 20f;
+    private Plane _groundPlane = new Plane(Vector3.up, Vector3.zero);
+    private float _rayLength;
     
     void Start()
     {
-        input = new PlayerControls();
-        input.Enable();
-
-        input.Player.Move.performed += ctx =>
-        {
-            PlayerMoveInput = new Vector3(ctx.ReadValue<Vector2>().x, 0, ctx.ReadValue<Vector2>().y);
-        };
-        input.Player.Move.canceled += ctx =>
-        {
-            PlayerMoveInput = new Vector3(ctx.ReadValue<Vector2>().x, 0, ctx.ReadValue<Vector2>().y);
-        };
-        input.Player.Fire.started += Shoot;
-        
-        Controller = GetComponent<CharacterController>();
+        _player = GetComponent<Player>();
+        _initializer = GetComponent<PlayerControlsInitializer>();
+        _playerMovement = _initializer.MoveInput;
+        _controller = GetComponent<CharacterController>();
     }
 
     void Update()
@@ -49,31 +31,20 @@ public class PlayerMovement : MonoBehaviour
 
     void LookAtPos()
     {
-        Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, layerMask)) {
-            //transform.position = raycastHit.point;
-        }
+        var ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        if (groundPlane.Raycast(ray, out rayLength))
+        if (_groundPlane.Raycast(ray, out _rayLength))
         {
-            Vector3 pointToLook = ray.GetPoint(rayLength);
+            var pointToLook = ray.GetPoint(_rayLength);
             Debug.DrawLine(ray.origin, pointToLook, Color.cyan);
 
-            playerCapsule.transform.LookAt(new Vector3(pointToLook.x, playerCapsule.transform.position.y, pointToLook.z));
+            _playerCapsule.transform.LookAt(new Vector3(pointToLook.x, _playerCapsule.transform.position.y, pointToLook.z));
         }
     }
 
     private void Move()
     {
-        //Vector3 MoveVec = transform.TransformDirection(PlayerMoveInput); (Uncomment to move in view direction)
-
-        Controller.Move(PlayerMoveInput * (_speed * Time.deltaTime));
-    }
-
-    private void Shoot(InputAction.CallbackContext ctx)
-    {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.AddForce(firePoint.forward * bulletForce, ForceMode.Impulse);
+        _playerMovement = new Vector3(_initializer.MoveInput.x, 0, _initializer.MoveInput.y);
+        _controller.Move(_playerMovement * (_player.GetMovementSpeed() * Time.deltaTime));
     }
 }
